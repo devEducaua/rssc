@@ -1,6 +1,9 @@
-package internal
+package cli
 
-import "fmt"
+import (
+	"fmt"
+	"rssc/internal/requests"
+)
 
 func ParseArgs(argv []string) error {
 	if len(argv) < 2 {
@@ -37,7 +40,7 @@ func ParseArgs(argv []string) error {
 			source = flagMap["id"].Value;
 		}
 
-		resp, err := GetCommand(source, limit);
+		resp, err := requests.GetCommand(source, limit);
 		if err != nil {
 			return err;
 		}
@@ -57,7 +60,7 @@ func ParseArgs(argv []string) error {
 			text = flagMap["text"].Value;
 		}
 
-		resp, err := FindCommand(text, limit);
+		resp, err := requests.FindCommand(text, limit);
 		if err != nil {
 			return err;
 		}
@@ -71,7 +74,7 @@ func ParseArgs(argv []string) error {
 			id = flagMap["id"].Value;
 		}
 
-		resp, err := ReadCommand(id);
+		resp, err := requests.ReadCommand(id);
 		if err != nil {
 			return err;
 		}
@@ -83,7 +86,7 @@ func ParseArgs(argv []string) error {
 			id = flagMap["id"].Value;
 		}
 
-		resp, err := UnreadCommand(id);
+		resp, err := requests.UnreadCommand(id);
 		if err != nil {
 			return err;
 		}
@@ -95,7 +98,7 @@ func ParseArgs(argv []string) error {
 			id = flagMap["id"].Value;
 		}
 
-		resp, err := DeleteCommand(id);
+		resp, err := requests.DeleteCommand(id);
 		if err != nil {
 			return err;
 		}
@@ -107,7 +110,7 @@ func ParseArgs(argv []string) error {
 			id = flagMap["id"].Value;
 		}
 
-		resp, err := OpenCommand(id);
+		resp, err := requests.OpenCommand(id);
 		if err != nil {
 			return err;
 		}
@@ -119,7 +122,7 @@ func ParseArgs(argv []string) error {
 			source = flagMap["source"].Value;
 		}
 
-		resp, err := UpdateCommand(source);
+		resp, err := requests.UpdateCommand(source);
 		if err != nil {
 			return err;
 		}

@@ -1,9 +1,11 @@
-package internal
+package requests
 
 import (
 	"fmt"
 	"strings"
 	"encoding/json"
+
+	"rssc/internal/rssd"
 )
 
 type GetResponse struct {
@@ -19,17 +21,17 @@ type GetResponse struct {
 func sendCommand[T any](req string) (T, error) {
 	var result T;
 
-	conn, err := Connect();
+	conn, err := rssd.Connect();
 	if err != nil {
 		return result, err;
 	}
 
-	err = Send(conn, req);
+	err = rssd.Send(conn, req);
 	if err != nil {
 		return result, err;
 	}
 
-	resp, err := Recv(conn);
+	resp, err := rssd.Recv(conn);
 	if err != nil {
 		return result, err;
 	}
