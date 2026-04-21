@@ -32,6 +32,9 @@ func ParseArgs(argv []string) error {
 
 		} else if flagMap["feed"].Enabled {
 			source = flagMap["feed"].Value;
+
+		}  else if flagMap["id"].Enabled {
+			source = flagMap["id"].Value;
 		}
 
 		resp, err := GetCommand(source, limit);
@@ -42,6 +45,86 @@ func ParseArgs(argv []string) error {
 			fmt.Println(v.Title);
 		}
 
+	case "find":
+		var limit int;
+		if !flagMap["limit"].Enabled {
+			limit = 0;
+		}
+
+		var text string;
+
+		if flagMap["text"].Enabled {
+			text = flagMap["text"].Value;
+		}
+
+		resp, err := FindCommand(text, limit);
+		if err != nil {
+			return err;
+		}
+		for _,v := range resp {
+			fmt.Println(v);
+		}
+
+	case "read":
+		var id string;
+		if flagMap["id"].Enabled {
+			id = flagMap["id"].Value;
+		}
+
+		resp, err := ReadCommand(id);
+		if err != nil {
+			return err;
+		}
+		fmt.Println(resp);
+
+	case "unread":
+		var id string;
+		if flagMap["id"].Enabled {
+			id = flagMap["id"].Value;
+		}
+
+		resp, err := UnreadCommand(id);
+		if err != nil {
+			return err;
+		}
+		fmt.Println(resp);
+
+	case "delete":
+		var id string;
+		if flagMap["id"].Enabled {
+			id = flagMap["id"].Value;
+		}
+
+		resp, err := DeleteCommand(id);
+		if err != nil {
+			return err;
+		}
+		fmt.Println(resp);
+
+	case "open":
+		var id string;
+		if flagMap["id"].Enabled {
+			id = flagMap["id"].Value;
+		}
+
+		resp, err := OpenCommand(id);
+		if err != nil {
+			return err;
+		}
+		fmt.Println(resp);
+
+	case "update":
+		var source string;
+		if flagMap["source"].Enabled {
+			source = flagMap["source"].Value;
+		}
+
+		resp, err := UpdateCommand(source);
+		if err != nil {
+			return err;
+		}
+		fmt.Println(resp);
+
 	default:
 		return fmt.Errorf("command: `%v` not exists\n", argv[0]);
 	}
@@ -49,66 +132,3 @@ func ParseArgs(argv []string) error {
 	return nil;
 }
 
-type Flag struct {
-	Enabled bool
-	Value string
-}
-
-func parseFlags(argv []string) (map[string]Flag, error) {
-	flagMap := make(map[string]Flag);
-
-	for i,v := range argv {
-		switch v {
-		case "-i", "--id":
-			var flag Flag;
-
-			if len(argv) <= i+1 {
-				return nil, fmt.Errorf("failed to parse flags: `--id` need an argument.");
-			}
-
-			flag.Value = argv[i+1];
-			flag.Enabled = true;
-			flagMap["id"] = flag;
-
-		case "-l", "--limit":
-			var flag Flag;
-
-			if len(argv) <= i+1 {
-				return nil, fmt.Errorf("failed to parse flags: `--limit` need an argument.");
-			}
-
-			flag.Value = argv[i+1];
-			flag.Enabled = true;
-			flagMap["limit"] = flag;
-
-		case "-v", "--verbose":
-			flag := Flag{ Enabled: true, Value: "" };
-			flagMap["verbose"] = flag;
-
-		case "-u", "--unread":
-			flag := Flag{ Enabled: true, Value: "" };
-			flagMap["unread"] = flag;
-
-		case "-r", "--read":
-			flag := Flag{ Enabled: true, Value: "" };
-			flagMap["read"] = flag;
-
-		case "-a", "--all":
-			flag := Flag{ Enabled: true, Value: "" };
-			flagMap["all"] = flag;
-
-		case "-f", "--feed":
-			var flag Flag;
-
-			if len(argv) <= i+1 {
-				return nil, fmt.Errorf("failed to parse flags: `--feed` need an argument.");
-			}
-
-			flag.Value = argv[i+1];
-			flag.Enabled = true;
-			flagMap["feed"] = flag;
-		}
-	}
-
-	return flagMap, nil;
-}
