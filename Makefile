@@ -1,5 +1,5 @@
 TARGET ?= rssc
-SRCS := $(wildcard *.go)
+SRCS := $(wildcard */*.go)
 
 all: $(TARGET)
 
